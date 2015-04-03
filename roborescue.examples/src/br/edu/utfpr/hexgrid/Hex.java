@@ -15,10 +15,11 @@ import java.util.ArrayList;
 public class Hex {
     private ArrayList<Hex> vizinhos;
     private int x, y;
-    private int g; //custo para chegar
-    private int h; //custo estimado até o objetivo
-    private int inflacao;
-    private Hex parent;
+    private int g; //custo para chegar ate ele
+    private int h; //custo estimado dele até o objetivo
+    private int inflacao; //incremento no g para o lrta*
+    private Hex parent; //para traçar o caminho
+    private boolean block; //determina se a célua está ou não bloqueada
 
     public Hex(int x, int y) {
         this.vizinhos = new ArrayList();
