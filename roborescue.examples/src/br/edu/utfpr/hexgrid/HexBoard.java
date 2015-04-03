@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class HexBoard implements Serializable {
     ArrayList<ArrayList<Hex>> board;
     
-    public HexBoard(ArrayList<Pos> aliados, ArrayList<Pos> inimigos, Pos objetivo){
+    public HexBoard(ArrayList<Pos> aliados, ArrayList<Pos> inimigos, Pos objetivo, int raiobarreira){
         //instanciar os vertices
         board = new ArrayList();
         for(int i = 0; i < 41; i++)
@@ -32,9 +32,41 @@ public class HexBoard implements Serializable {
         }
        
        //TODO inicializar as arestas
+        for(int i = 0; i < 41; i++)        
+            for(int j = 0; j < 25; j++){
+               if((j % 2) > 0){
+                   if(j > 0)
+                        board.get(i).get(j).getVizinhos().add(board.get(i).get(j-1));
+                   if(i < 40 && j > 0)
+                        board.get(i).get(j).getVizinhos().add(board.get(i+1).get(j-1));
+                   if(i > 0)                   
+                        board.get(i).get(j).getVizinhos().add(board.get(i-1).get(j));
+                   if(j < 24)
+                        board.get(i).get(j).getVizinhos().add(board.get(i).get(j+1));
+                   if(i < 40 && j < 24)
+                        board.get(i).get(j).getVizinhos().add(board.get(i+1).get(j+1));
+                   if(i < 40)
+                        board.get(i).get(j).getVizinhos().add(board.get(i+1).get(j));                   
+               }
+               else{
+                   if(i > 0 && j > 0)  
+                        board.get(i).get(j).getVizinhos().add(board.get(i-1).get(j-1));
+                   if(j > 0)
+                        board.get(i).get(j).getVizinhos().add(board.get(i).get(j-1));
+                   if(i < 40)
+                        board.get(i).get(j).getVizinhos().add(board.get(i+1).get(j));
+                   if(j < 24)
+                        board.get(i).get(j).getVizinhos().add(board.get(i).get(j+1));
+                   if(i > 0 && j < 24)
+                        board.get(i).get(j).getVizinhos().add(board.get(i-1).get(j+1));
+                   if(i > 0)
+                        board.get(i).get(j).getVizinhos().add(board.get(i-1).get(j));
+            }
+        }       
        
        //TODO marcar as células de barreira como bloqueadas
        
+        
     }
     
     public ArrayDeque<Pos> Astar(int sx, int sy, int gx, int gy){
@@ -82,12 +114,13 @@ public class HexBoard implements Serializable {
         return new ArrayDeque<>();
     }
     
-    //TODO ler de um arquivo
+    //TODO ler do arquivo
     public Pos LRTAstar(int sx, int sy, int gx, int gy){
         Hex current = board.get(sx).get(sy);
         Hex last = current;
+        current.setInflacao(current.getInflacao() + 60);
         for(Hex v: current.getVizinhos()){
-            v.setInflacao(v.getInflacao() + 50);
+            v.setInflacao(v.getInflacao() + 60);
         }
         Hex menorf = current.getVizinhos().get(0);
         for(Hex w: current.getVizinhos()){

@@ -143,7 +143,7 @@ public class TimeTarBuscaATeamEnv extends RoborescueEnv {
                 for(int cont2 = 0; cont2 < 5; cont2++){
                     PosInimigos.add(new Pos((int)inimigos[cont2].getX(), (int)inimigos[cont2].getY()));
                 }               
-                HexBoard board = new HexBoard(PosAliados, PosInimigos, new Pos((int)aliados[0].getRobotInfo().getX(), (int)aliados[0].getRobotInfo().getY()));
+                HexBoard board = new HexBoard(PosAliados, PosInimigos, new Pos((int)aliados[0].getRobotInfo().getX(), (int)aliados[0].getRobotInfo().getY()), 60);
                 //TODO Planeja o caminho usando o A*
                 filaDeAcoes = board.Astar((int)aliados[1].getRobotInfo().getX()/60, (int)aliados[1].getRobotInfo().getY()/60, (int)aliados[0].getRobotInfo().getX()/60, (int)aliados[0].getRobotInfo().getY()/60);
                 //Executa o caminho achado pelo A*
