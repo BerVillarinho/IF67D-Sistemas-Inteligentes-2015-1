@@ -78,5 +78,13 @@ public class Hex {
     public void setInflacao(int inflacao) {
         this.inflacao = inflacao;
     }
-    
+
+    public boolean isBlock() {
+        return block;
+    }
+
+    public void setBlock(boolean block) {
+        this.block = block;
+    }
+
 }

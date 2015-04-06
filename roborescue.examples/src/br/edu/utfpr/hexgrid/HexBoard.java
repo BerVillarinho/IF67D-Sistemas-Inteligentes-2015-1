@@ -11,6 +11,14 @@ import java.util.ArrayList;
  */
 public class HexBoard implements Serializable {
     ArrayList<ArrayList<Hex>> board;
+
+    public ArrayList<ArrayList<Hex>> getBoard() {
+        return board;
+    }
+
+    public void setBoard(ArrayList<ArrayList<Hex>> board) {
+        this.board = board;
+    }
     
     public HexBoard(ArrayList<Pos> aliados, ArrayList<Pos> inimigos, Pos objetivo, int raiobarreira){
         //instanciar os vertices
@@ -31,7 +39,6 @@ public class HexBoard implements Serializable {
            }
         }
        
-       //TODO inicializar as arestas
         for(int i = 0; i < 41; i++)        
             for(int j = 0; j < 25; j++){
                if((j % 2) > 0){
@@ -65,8 +72,29 @@ public class HexBoard implements Serializable {
         }       
        
        //TODO marcar as células de barreira como bloqueadas
+       this.barreira(aliados, inimigos, raiobarreira);
+       
        
         
+    }
+    
+    private void barreira(ArrayList<Pos> aliados, ArrayList<Pos> inimigos, int raiobarreira){
+        for(Pos p : aliados){
+            this.board.get(p.x).get(p.y).setBlock(true);
+        }
+        for(Pos p : inimigos){
+            this.board.get(p.x).get(p.y).setBlock(true);
+            ArrayList<Hex> doBlock = this.board.get(p.x).get(p.y).getVizinhos();
+            for(int i = 0; i < raiobarreira; i++){
+                ArrayList<Hex> toAdd = new ArrayList();
+                for(Hex h: doBlock){
+                    h.setBlock(true);
+                    toAdd.addAll(h.getVizinhos());
+                }
+                doBlock.clear();
+                doBlock.addAll(toAdd);
+            }
+        }
     }
     
     public ArrayDeque<Pos> Astar(int sx, int sy, int gx, int gy){
@@ -91,14 +119,15 @@ public class HexBoard implements Serializable {
             closed.add(current);
             if(current.getX() == gx && current.getY() == gy){
                 System.out.println("A* CHEGOU EM GOAL!!!!");
-                while(current.getX() != sx && current.getY() != sy){
-                    plano.push(new Pos(current.getX() * 3600, current.getY() * 3600));
+                while(current.getX() != sx || current.getY() != sy){
+                    //System.out.println(current.getX() + "," + current.getY());
+                    plano.push(new Pos(current.getX(), current.getY()));
                     current = current.getParent();
                 }
                 return plano;
             }
             for(Hex v: current.getVizinhos()){
-                if(!closed.contains(v)){
+                if(!closed.contains(v) && !v.isBlock()){
                     if(!open.contains(v)){
                         open.add(v);
                         v.setParent(current);

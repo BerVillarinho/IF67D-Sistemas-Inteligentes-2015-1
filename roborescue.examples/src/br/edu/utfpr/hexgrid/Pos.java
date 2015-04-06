@@ -14,8 +14,8 @@ public class Pos {
     int x, y;
 
     public Pos(int x, int y) {
-        this.x = x/60;
-        this.y = y/60;
+        this.x = x;
+        this.y = y;
     }
 
     public int getX() {
