@@ -35,29 +35,29 @@ public class TimeTarBuscaBTeamEnv extends RoborescueEnv {
              ** para o time oponente
              */
             if (meuLadoCampo == 'e') {
-                aliados[1].setAhead(300);
+                aliados[1].setAhead(500);
                 aliados[1].execute();
 
-                aliados[2].setAhead(200);
+                aliados[2].setAhead(400);
                 aliados[2].execute();
 
-                aliados[3].setAhead(250);
+                aliados[3].setAhead(450);
                 aliados[3].execute();
 
-                aliados[4].setAhead(350);
+                aliados[4].setAhead(550);
                 aliados[4].execute();
             } else {
-                aliados[4].setAhead(350);
-                aliados[4].execute();
-                
-                aliados[3].setAhead(250);
-                aliados[3].execute();
-                
-                aliados[2].setAhead(200);
+                aliados[1].setAhead(500);
+                aliados[1].execute();
+
+                aliados[2].setAhead(400);
                 aliados[2].execute();
 
-                aliados[1].setAhead(300);
-                aliados[1].execute();
+                aliados[3].setAhead(450);
+                aliados[3].execute();
+
+                aliados[4].setAhead(550);
+                aliados[4].execute();
             }
         } catch (RemoteException ex) {
             System.out.println(ex.getMessage());

@@ -35,7 +35,7 @@ public class HexBoard implements Serializable {
        //Heuristica utilizada: distancia entre dois pontos
        for(int i = 0; i < 41; i++){
            for(int j = 0; j < 25; j++){
-               board.get(i).get(j).setH((int) Math.sqrt((Math.abs(goal.getX()-i) + Math.abs(goal.getY() - j)) * 60));
+               board.get(i).get(j).setH((int) (Math.sqrt((Math.abs(goal.getX()-i) + Math.abs(goal.getY() - j)) * 60)));
            }
         }
        
@@ -102,7 +102,7 @@ public class HexBoard implements Serializable {
         ArrayList<Hex> closed = new ArrayList();
         Hex current = board.get(sx).get(sy);
         ArrayList<Hex> open = new ArrayList();
-        open.add(current);        
+        open.add(current); 
         
         while(!open.isEmpty()){         
             Hex menorf = open.get(0);

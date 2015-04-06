@@ -137,20 +137,30 @@ public class TimeTarBuscaATeamEnv extends RoborescueEnv {
                 ArrayDeque<Pos> filaDeAcoes;
                 ArrayList<Pos> PosAliados = new ArrayList();
                 for(int cont1 = 2; cont1 < 5; cont1++){
-                    PosAliados.add(new Pos((int)aliados[cont1].getRobotInfo().getX(), (int)aliados[cont1].getRobotInfo().getY()));
+                    PosAliados.add(new Pos((int)aliados[cont1].getRobotInfo().getX()/60, (int)aliados[cont1].getRobotInfo().getY()/60));
                 }
                 ArrayList<Pos> PosInimigos = new ArrayList();
                 for(int cont2 = 0; cont2 < 5; cont2++){
-                    PosInimigos.add(new Pos((int)inimigos[cont2].getX(), (int)inimigos[cont2].getY()));
+                    PosInimigos.add(new Pos((int)inimigos[cont2].getX()/60, (int)inimigos[cont2].getY()/60));
                 }               
-                HexBoard board = new HexBoard(PosAliados, PosInimigos, new Pos((int)aliados[0].getRobotInfo().getX(), (int)aliados[0].getRobotInfo().getY()), 60);
+                HexBoard board = new HexBoard(PosAliados, PosInimigos, new Pos((int)aliados[0].getRobotInfo().getX()/60, (int)aliados[0].getRobotInfo().getY()/60), 2);
                 //TODO Planeja o caminho usando o A*
                 filaDeAcoes = board.Astar((int)aliados[1].getRobotInfo().getX()/60, (int)aliados[1].getRobotInfo().getY()/60, (int)aliados[0].getRobotInfo().getX()/60, (int)aliados[0].getRobotInfo().getY()/60);
                 //Executa o caminho achado pelo A*
+                ArrayDeque<Pos> volta = new ArrayDeque();
+                volta.push(new Pos((int)aliados[1].getRobotInfo().getX()/60, (int)aliados[1].getRobotInfo().getY()/60));
                 while(!filaDeAcoes.isEmpty()){
                     Pos pop = filaDeAcoes.pop();
-                    atuador.irPara(aliados[1], pop.getX(), pop.getY());
+                    volta.push(pop);
+                    atuador.irPara(aliados[1], pop.getX()*60, pop.getY()*60);
                 }
+                while(!volta.isEmpty()){
+                    Pos pop = volta.pop();
+                    atuador.irPara(aliados[1], pop.getX()*60, pop.getY()*60);
+                }
+                aliados[1].ahead(150);
+                aliados[1].execute();                
+                
             }
         }
 
