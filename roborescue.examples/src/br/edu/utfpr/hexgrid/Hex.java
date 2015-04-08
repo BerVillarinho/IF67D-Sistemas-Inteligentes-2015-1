@@ -6,13 +6,14 @@
 
 package br.edu.utfpr.hexgrid;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Bernardo
  */
-public class Hex {
+public class Hex implements Serializable{
     private ArrayList<Hex> vizinhos;
     private int x, y;
     private int g; //custo para chegar ate ele

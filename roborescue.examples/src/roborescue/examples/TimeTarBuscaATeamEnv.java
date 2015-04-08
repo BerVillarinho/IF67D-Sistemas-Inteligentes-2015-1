@@ -75,21 +75,18 @@ public class TimeTarBuscaATeamEnv extends RoborescueEnv {
                     Logger.getLogger(TimeTarBuscaATeamEnv.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
-            } else {
-                aliados[4].turnRight(25);
-                aliados[4].execute();                
+            } else {              
                 aliados[4].ahead(175);
                 aliados[4].execute();
                 
-                aliados[3].turnRight(- 15);
-                aliados[3].execute();
                 aliados[3].ahead(200);
                 aliados[3].execute();
-                
-                aliados[2].turnRight( - 45);
-                aliados[2].execute();                
+                               
                 aliados[2].ahead(150);
-                aliados[2].execute();                
+                aliados[2].execute();
+                
+                aliados[2].ahead(40);
+                aliados[2].execute();                 
             }
 
             /* Obtem informacoes dos robos do time inimigo - as posicoes dos 
@@ -160,6 +157,7 @@ public class TimeTarBuscaATeamEnv extends RoborescueEnv {
                 }
                 aliados[1].ahead(150);
                 aliados[1].execute();                
+                
                 
             }
         }

@@ -8,7 +8,10 @@ package roborescue.examples;
 import atuador.AtuadorSincrono;
 import jason.RoborescueEnv;
 import jason.asSyntax.Structure;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.rmi.RemoteException;
+import net.sf.robocode.robotpaint.Graphics2DSerialized;
 import robocode.rescue.RobotInfo;
 import robocode.rescue.interfaces.RMIRobotInterface;
 
