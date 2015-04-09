@@ -23,7 +23,7 @@ public class TestHex {
         inimigos.add(new Pos(15, 15));
         inimigos.add(new Pos(20, 20));
         Pos objetivo = new Pos(40, 24);
-        HexBoard board = new HexBoard(aliados, inimigos, objetivo, 2);
+        HexBoard board = new HexBoard(aliados, inimigos, objetivo, 2, false);
         Scanner scanner = new Scanner(System.in); 
         
         ArrayDeque<Pos> parent = board.Astar(5, 5, 40, 24);

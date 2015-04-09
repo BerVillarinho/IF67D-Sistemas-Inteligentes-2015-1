@@ -147,12 +147,22 @@ public class TimeTarBuscaCTeamEnv extends RoborescueEnv {
                 for(int cont2 = 0; cont2 < 5; cont2++){
                     PosInimigos.add(new Pos((int)inimigos[cont2].getX()/60, (int)inimigos[cont2].getY()/60));
                 }               
-                HexBoard board = new HexBoard(PosAliados, PosInimigos, new Pos((int)aliados[0].getRobotInfo().getX()/60, (int)aliados[0].getRobotInfo().getY()/60), 2);                  
+                HexBoard board = new HexBoard(PosAliados, PosInimigos, new Pos((int)aliados[0].getRobotInfo().getX()/60, (int)aliados[0].getRobotInfo().getY()/60), 2, true);                  
                 //Executa o caminho achado pelo LRTA*
+                ArrayDeque<Pos> volta = new ArrayDeque();
+                volta.push(new Pos((int)aliados[1].getRobotInfo().getX()/60, (int)aliados[1].getRobotInfo().getY()/60));                
                 while(isNotPertoRefem()){
                     Pos pop = board.LRTAstar((int)aliados[1].getRobotInfo().getX()/60, (int)aliados[1].getRobotInfo().getY()/60, (int)aliados[0].getRobotInfo().getX()*60, (int)aliados[0].getRobotInfo().getY()*60);
+                    volta.push(pop);
                     atuador.irPara(aliados[1], pop.getX()*60, pop.getY()*60);
                 }
+                board.saveBoard();
+                while(!volta.isEmpty()){
+                    Pos pop = volta.pop();
+                    atuador.irPara(aliados[1], pop.getX()*60, pop.getY()*60);
+                }
+                aliados[1].ahead(300);
+                aliados[1].execute();                   
                 
             }
         }
@@ -170,10 +180,7 @@ public class TimeTarBuscaCTeamEnv extends RoborescueEnv {
         double distanciaX = Math.abs(xHeroi-xRefem);
         double distanciaY = Math.abs(yHeroi-yRefem);
         
-        if(distanciaX > 10.0 && distanciaY > 10.0)
-            return true;
-        else
-            return false;
+        return Math.sqrt(Math.pow(distanciaX, 2) + Math.pow(distanciaY, 2)) >= 15.0;
     }
 
     @Override

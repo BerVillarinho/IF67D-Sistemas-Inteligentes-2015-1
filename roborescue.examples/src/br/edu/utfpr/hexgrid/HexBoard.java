@@ -1,7 +1,9 @@
 package br.edu.utfpr.hexgrid;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayDeque;
@@ -23,7 +25,7 @@ public class HexBoard implements Serializable {
         this.board = board;
     }
     
-    public HexBoard(ArrayList<Pos> aliados, ArrayList<Pos> inimigos, Pos objetivo, int raiobarreira){
+    public HexBoard(ArrayList<Pos> aliados, ArrayList<Pos> inimigos, Pos objetivo, int raiobarreira, boolean lrta){
         //instanciar os vertices
         board = new ArrayList();
         for(int i = 0; i < 41; i++)
@@ -41,6 +43,10 @@ public class HexBoard implements Serializable {
                board.get(i).get(j).setH((int) (Math.sqrt((Math.pow(goal.getX()-i, 2) + Math.pow(goal.getY() - j, 2)) * 60)));
            }
         }
+       
+       if(lrta){
+           loadBoard();
+       }
        
         for(int i = 0; i < 41; i++)        
             for(int j = 0; j < 25; j++){
@@ -121,22 +127,11 @@ public class HexBoard implements Serializable {
                 System.out.println("ESVAZIOU O OPEN!!!!!!");
             }
             closed.add(current);
-            if(current.getX() == gx && current.getY() == gy){
-                System.out.println("A* CHEGOU EM GOAL!!!!");
-                while(current.getX() != sx || current.getY() != sy){
-                    //System.out.println(current.getX() + "," + current.getY());
-                    plano.push(new Pos(current.getX(), current.getY()));
-                    custo++;
-                    current = current.getParent();
-                }
-                System.out.println("O custo do caminho e:" + custo);
-                System.out.println("A disância entre os dois pontos é:" + ((int) (Math.sqrt((Math.pow(gx - sx, 2) + Math.pow(gy - sy, 2))))));
-                return plano;
-            }
             for(Hex v: current.getVizinhos()){
                 if(!closed.contains(v) && !v.isBlock()){
-                    if(!open.contains(v)){
-                        open.add(v);
+                    if(!open.contains(v) || v.getG() > (current.getG() + 1)){
+                        if(!open.contains(v))
+                            open.add(v);
                         v.setParent(current);
                         v.setG(current.getG() + 1);
                     }
@@ -145,6 +140,18 @@ public class HexBoard implements Serializable {
                             v.setParent(current);
                     }
                 }
+            }            
+            if(current.getX() == gx && current.getY() == gy){
+                System.out.println("A* CHEGOU EM GOAL!!!!");
+                while(current.getX() != sx || current.getY() != sy){
+                    System.out.println("[" + current.getX() + "," + current.getY() + "]" + " F:" + current.getF());
+                    plano.push(new Pos(current.getX(), current.getY()));
+                    custo++;
+                    current = current.getParent();
+                }
+                System.out.println("O custo do caminho e:" + custo);
+                System.out.println("A disância entre os dois pontos é:" + ((int) (Math.sqrt((Math.pow(gx - sx, 2) + Math.pow(gy - sy, 2))))));
+                return plano;
             }
         }
         System.out.println("NÃO ACHOU CAMINHO; FALHOU");
@@ -199,4 +206,28 @@ public class HexBoard implements Serializable {
       }
     }
     
+    private void loadBoard(){
+        ArrayList<ArrayList<Integer>> inflacoes = new ArrayList();
+        try
+        {
+            FileInputStream fis = new FileInputStream("board.ser");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            inflacoes = (ArrayList) ois.readObject();
+            ois.close();
+            fis.close();
+         }catch(IOException ioe){
+             System.out.println("IOE");
+             return;
+          }catch(ClassNotFoundException c){
+             System.out.println("Class not found");
+             return;
+          }        
+        
+        for(int i = 0; i < 41; i++)        
+            for(int j = 0; j < 25; j++){
+                    board.get(i).get(j).setInflacao(inflacoes.get(i).get(j));
+        }
+        
+        
+    }
 }
