@@ -55,22 +55,18 @@ public class TimeTarBuscaCTeamEnv extends RoborescueEnv {
             /*DONE- posicionar os robos aleatoriamente para o LRTA*
              */
             if (meuLadoCampo == 'e') {
-                aliados[2].turnRight( - 45);
-                aliados[2].execute();                
-                aliados[2].ahead(150);
+              
+                aliados[2].ahead(300);
                 aliados[2].execute();
 
-                aliados[3].turnRight(- 15);
-                aliados[3].execute();
-                aliados[3].ahead(200);
-                aliados[3].execute();
 
-                aliados[4].turnRight(25);
-                aliados[4].execute();                
-                aliados[4].ahead(175);
+                aliados[3].ahead(400);
+                aliados[3].execute();
+               
+                aliados[4].ahead(475);
                 aliados[4].execute();
                 try{
-                    sleep(10000);
+                    sleep(3000);
                 }
                 catch (InterruptedException ex) {
                     Logger.getLogger(TimeTarBuscaATeamEnv.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,20 +75,21 @@ public class TimeTarBuscaCTeamEnv extends RoborescueEnv {
                 
             } else {
                 
-                aliados[4].turnRight(25);
-                aliados[4].execute();                
-                aliados[4].ahead(175);
-                aliados[4].execute();
-                
-                aliados[3].turnRight(- 15);
-                aliados[3].execute();
-                aliados[3].ahead(200);
-                aliados[3].execute();
-                
-                aliados[2].turnRight( - 45);
-                aliados[2].execute();                
-                aliados[2].ahead(150);
+                aliados[2].ahead(300);
                 aliados[2].execute();
+
+
+                aliados[3].ahead(400);
+                aliados[3].execute();
+               
+                aliados[4].ahead(475);
+                aliados[4].execute();
+                try{
+                    sleep(3000);
+                }
+                catch (InterruptedException ex) {
+                    Logger.getLogger(TimeTarBuscaATeamEnv.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
             }
 
@@ -121,7 +118,7 @@ public class TimeTarBuscaCTeamEnv extends RoborescueEnv {
         return true;
     }
 
-    public void mainLoop() throws RemoteException {
+    public void mainLoop() throws RemoteException, InterruptedException {
         robos = getServerRef().getMyTeamInfo(myTeam);
 
         RobotInfo refem = robos[0];
@@ -151,18 +148,29 @@ public class TimeTarBuscaCTeamEnv extends RoborescueEnv {
                 //Executa o caminho achado pelo LRTA*
                 ArrayDeque<Pos> volta = new ArrayDeque();
                 volta.push(new Pos((int)aliados[1].getRobotInfo().getX()/60, (int)aliados[1].getRobotInfo().getY()/60));                
+                int posSalvadorX = (int)aliados[1].getRobotInfo().getX();
+                int posSalvadorY = (int)aliados[1].getRobotInfo().getY();
+                board.printBlock();
                 while(isNotPertoRefem()){
+                    double xHeroi1 = aliados[1].getRobotInfo().getX();
+                    double yHeroi1 = aliados[1].getRobotInfo().getY();                    
                     Pos pop = board.LRTAstar((int)aliados[1].getRobotInfo().getX()/60, (int)aliados[1].getRobotInfo().getY()/60, (int)aliados[0].getRobotInfo().getX()*60, (int)aliados[0].getRobotInfo().getY()*60);
                     volta.push(pop);
                     atuador.irPara(aliados[1], pop.getX()*60, pop.getY()*60);
+                    double xHeroi2 = aliados[1].getRobotInfo().getX();
+                    double yHeroi2 = aliados[1].getRobotInfo().getY();
+                    if(xHeroi1 == xHeroi2 && yHeroi1 == yHeroi2)
+                        board.saveBoard();
+                    
                 }
-                board.saveBoard();
+                System.out.println("CUSTO DO CAMINHO: " + (volta.size() - 1));
+                if((volta.size() - 1) > 43)
+                    board.saveBoard();
                 while(!volta.isEmpty()){
                     Pos pop = volta.pop();
                     atuador.irPara(aliados[1], pop.getX()*60, pop.getY()*60);
                 }
-                aliados[1].ahead(300);
-                aliados[1].execute();                   
+                atuador.irPara(aliados[1], 50, 600);                
                 
             }
         }
@@ -180,7 +188,7 @@ public class TimeTarBuscaCTeamEnv extends RoborescueEnv {
         double distanciaX = Math.abs(xHeroi-xRefem);
         double distanciaY = Math.abs(yHeroi-yRefem);
         
-        return Math.sqrt(Math.pow(distanciaX, 2) + Math.pow(distanciaY, 2)) >= 15.0;
+        return Math.sqrt(Math.pow(distanciaX, 2) + Math.pow(distanciaY, 2)) >= 60.0;
     }
 
     @Override

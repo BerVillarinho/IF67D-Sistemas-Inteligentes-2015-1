@@ -4,6 +4,7 @@
  */
 package roborescue.examples;
 
+import atuador.AtuadorAssincrono;
 import atuador.AtuadorSincrono;
 import br.edu.utfpr.hexgrid.*;
 import jason.RoborescueEnv;
@@ -25,7 +26,7 @@ public class TimeTarBuscaATeamEnv extends RoborescueEnv {
     private RobotInfo[] inimigos;
     private char meuLadoCampo;
     private RobotInfo[] robos;
-    private AtuadorSincrono atuador;
+    private AtuadorAssincrono atuador;
     private Boolean primeiraVez = true;
 
     //Para inicializacoes necessarias
@@ -34,7 +35,7 @@ public class TimeTarBuscaATeamEnv extends RoborescueEnv {
         try {
             aliados = getServerRef().getTeamInterfaces(nomeTime);
             meuLadoCampo = aliados[0].getRobotInfo().getX() > 200 ? 'e' : 'd';
-            atuador = new AtuadorSincrono();
+            atuador = new AtuadorAssincrono();
 
             /* O aliados[0] do time A eh o refem e inicia posicionado na 
              ** extremidade oposta do campo em relacao aos seus companheiros.
@@ -54,22 +55,18 @@ public class TimeTarBuscaATeamEnv extends RoborescueEnv {
             /*DONE- posicionar os robos aleatoriamente para o A*
              */
             if (meuLadoCampo == 'e') {
-                aliados[2].turnRight( - 45);
-                aliados[2].execute();                
-                aliados[2].ahead(150);
+              
+                aliados[2].ahead(300);
                 aliados[2].execute();
 
-                aliados[3].turnRight(- 15);
-                aliados[3].execute();
-                aliados[3].ahead(200);
-                aliados[3].execute();
 
-                aliados[4].turnRight(25);
-                aliados[4].execute();                
-                aliados[4].ahead(175);
+                aliados[3].ahead(400);
+                aliados[3].execute();
+               
+                aliados[4].ahead(475);
                 aliados[4].execute();
                 try{
-                    sleep(10000);
+                    sleep(3000);
                 }
                 catch (InterruptedException ex) {
                     Logger.getLogger(TimeTarBuscaATeamEnv.class.getName()).log(Level.SEVERE, null, ex);
@@ -148,7 +145,75 @@ public class TimeTarBuscaATeamEnv extends RoborescueEnv {
                 volta.push(new Pos((int)aliados[1].getRobotInfo().getX()/60, (int)aliados[1].getRobotInfo().getY()/60));
                 while(!filaDeAcoes.isEmpty()){
                     Pos pop = filaDeAcoes.pop();
+                    Pos ultimo = volta.peek();
                     volta.push(pop);
+                    
+                    int deltaY = pop.getY() - ultimo.getY();
+                    int deltaX = pop.getX() - ultimo.getX();
+                    double change = 0;
+                    
+                    /*if(ultimo.getX() % 2 != 0 && deltaX < 0 && deltaY > 0){                      
+                        aliados[1].setTurnLeft(60);
+                        aliados[1].setAhead(60);
+                        change = 60;
+                    }
+                    else if(ultimo.getX() % 2 == 0 && deltaX == 0 && deltaY < 0){                      
+                        aliados[1].setTurnLeft(60);
+                        aliados[1].setAhead(60);
+                        change = 60;
+                    }                               
+                    else if(ultimo.getX() % 2 != 0 && deltaX == 0 && deltaY > 0){                     
+                        aliados[1].setTurnRight(120);
+                        aliados[1].setAhead(60);
+                        change = -120;
+                    }
+                    else if(ultimo.getX() % 2 == 0 && deltaX < 0 && deltaY > 0){                     
+                        aliados[1].setTurnRight(120);
+                        aliados[1].setAhead(60);
+                        change = -120;
+                    }                            
+                    else if(ultimo.getX() % 2 == 0 && deltaX == 0 && deltaY > 0){                    
+                        aliados[1].setTurnRight(60);
+                        aliados[1].setAhead(60);
+                        change = -60;
+                    }
+                    else if(ultimo.getX() % 2 != 0 && deltaX > 0 && deltaY < 0){                    
+                        aliados[1].setTurnRight(60);
+                        aliados[1].setAhead(60);
+                        change = -60;
+                    }                            
+                    else if(ultimo.getX() % 2 != 0 && deltaX < 0 && deltaY < 0){
+                        aliados[1].setTurnLeft(120);
+                        aliados[1].setAhead(60);
+                        change = 120;
+                    }
+                    else if(ultimo.getX() % 2 == 0 && deltaX == 0 && deltaY < 0){
+                        aliados[1].setTurnLeft(120);
+                        aliados[1].setAhead(60);
+                        change = 120;
+                    }
+                    else if(deltaX > 0)
+                        aliados[1].ahead(60);
+                    else if(deltaX < 0 ){
+                        aliados[1].setTurnRight(180);
+                        aliados[1].setAhead(60);
+                        change = 180;
+                    }        
+                    aliados[1].execute();
+                    try{
+                        sleep(100);
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(TimeTarBuscaATeamEnv.class.getName()).log(Level.SEVERE, null, ex);
+                    }                    
+                    aliados[1].setTurnRight(change);
+                    aliados[1].execute();
+                    try{
+                        sleep(100);
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(TimeTarBuscaATeamEnv.class.getName()).log(Level.SEVERE, null, ex);
+                    }*/                          
                     atuador.irPara(aliados[1], pop.getX()*60, pop.getY()*60);
                 }
                 while(!volta.isEmpty()){

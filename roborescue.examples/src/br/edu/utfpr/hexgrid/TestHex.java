@@ -22,6 +22,7 @@ public class TestHex {
         inimigos.add(new Pos(10, 10));
         inimigos.add(new Pos(15, 15));
         inimigos.add(new Pos(20, 20));
+        aliados.add(new Pos(12, 20));
         Pos objetivo = new Pos(40, 24);
         HexBoard board = new HexBoard(aliados, inimigos, objetivo, 2, false);
         Scanner scanner = new Scanner(System.in); 
@@ -29,11 +30,11 @@ public class TestHex {
         ArrayDeque<Pos> parent = board.Astar(5, 5, 40, 24);
         board.saveBoard();
         //teste de vizinhancas
-        /*int i = scanner.nextInt();
+        int i = scanner.nextInt();
         int i2 = scanner.nextInt();
         for(Hex g: board.getBoard().get(i).get(i2).getVizinhos()){
             System.out.print("[" + g.getX() + "," + g.getY() + "]");
-        }*/
+        }
         
         //imprimir board
         /*for(Pos g: parent){

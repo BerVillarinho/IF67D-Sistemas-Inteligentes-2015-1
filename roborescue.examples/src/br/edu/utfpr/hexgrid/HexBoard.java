@@ -88,8 +88,27 @@ public class HexBoard implements Serializable {
     }
     
     private void barreira(ArrayList<Pos> aliados, ArrayList<Pos> inimigos, int raiobarreira){
+        for(Hex h : board.get(0)){
+            h.setBlock(true);
+        }
+        /*for(Hex h : board.get(board.size()-1)){
+            h.setBlock(true);
+        }*/  
+        for(int j = 0; j < 25; j++){
+                board.get(j).get(0).setBlock(true); 
+                board.get(j).get(1).setBlock(true);
+        }
+        for(int j = 0; j < 41; j++){
+                board.get(j).get(0).setBlock(true);
+                board.get(j).get(1).setBlock(true);
+                board.get(j).get(board.get(j).size() -1 ).setBlock(true);
+                board.get(j).get(board.get(j).size() -2 ).setBlock(true);
+        }
+        
         for(Pos p : aliados){
             this.board.get(p.x).get(p.y).setBlock(true);
+            for(Hex v: this.board.get(p.x).get(p.y).getVizinhos())
+                v.setBlock(true);
         }
         for(Pos p : inimigos){
             this.board.get(p.x).get(p.y).setBlock(true);
@@ -98,10 +117,12 @@ public class HexBoard implements Serializable {
                 ArrayList<Hex> toAdd = new ArrayList();
                 for(Hex h: doBlock){
                     h.setBlock(true);
-                    toAdd.addAll(h.getVizinhos());
+                    if(i + 1 <= raiobarreira)
+                        toAdd.addAll(h.getVizinhos());
                 }
                 doBlock.clear();
-                doBlock.addAll(toAdd);
+                if(i + 1 <= raiobarreira)
+                    doBlock.addAll(toAdd);
             }
         }
     }
@@ -149,7 +170,7 @@ public class HexBoard implements Serializable {
                     custo++;
                     current = current.getParent();
                 }
-                System.out.println("O custo do caminho e:" + custo);
+                System.out.println("O custo do caminho é:" + custo);
                 System.out.println("A disância entre os dois pontos é:" + ((int) (Math.sqrt((Math.pow(gx - sx, 2) + Math.pow(gy - sy, 2))))));
                 return plano;
             }
@@ -216,7 +237,7 @@ public class HexBoard implements Serializable {
             ois.close();
             fis.close();
          }catch(IOException ioe){
-             System.out.println("IOE");
+             System.out.println("Arquivo não encontrado");
              return;
           }catch(ClassNotFoundException c){
              System.out.println("Class not found");
@@ -230,4 +251,22 @@ public class HexBoard implements Serializable {
         
         
     }
+    
+    public void printBlock(){
+        for(ArrayList<Hex> h: this.getBoard()){
+            for(Hex g: h){
+                //System.out.print("[" + g.getX() + "," + g.getY() + "]");
+                if(g.isBlock()){
+                  System.out.print("X");
+                }
+                else{
+                  System.out.print("Z");
+                }
+            }
+            System.out.println("");
+        }        
+    
+    }
+    
+    
 }
